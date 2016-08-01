@@ -11,9 +11,6 @@ import android.view.animation.TranslateAnimation;
 import com.jimulabs.mirrorsandbox.MirrorSandboxBase;
 import com.teamtreehouse.albumcover.R;
 
-/**
- * Created by lintonye on 15-10-21.
- */
 public class ViewAnimationBox extends MirrorSandboxBase {
     public ViewAnimationBox(View rootView) {
         super(rootView);

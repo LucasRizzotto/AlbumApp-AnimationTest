@@ -12,23 +12,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class AlbumListActivity extends Activity {
 
-    @Bind(R.id.album_list) RecyclerView mAlbumList;
+    @BindView(R.id.album_list) RecyclerView mAlbumList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_album_list);
+        setContentView( R.layout.activity_album_list);
         setupTransitions();
 
         ButterKnife.bind(this);
         populate();
     }
+
+
 
     private void setupTransitions() {
 //        getWindow().setExitTransition(new Explode());
@@ -40,7 +42,7 @@ public class AlbumListActivity extends Activity {
 
     static class AlbumVH extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final OnVHClickedListener mListener;
-        @Bind(R.id.album_art)
+        @BindView(R.id.album_art)
         ImageView albumArt;
 
         public AlbumVH(View itemView, OnVHClickedListener listener) {

@@ -8,10 +8,8 @@ import android.transition.Visibility;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by weasley on 1/6/16.
- */
 public class Fold extends Visibility {
+
     @Override
     public Animator onAppear(ViewGroup sceneRoot, View view, TransitionValues startValues, TransitionValues endValues) {
         return createFoldAnimator(view, false);
@@ -35,6 +33,7 @@ public class Fold extends Visibility {
         ObjectAnimator animator = ObjectAnimator.ofInt(view, "bottom", start, end);
         return animator;
     }
+
 }
 
 
