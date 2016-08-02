@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff">
 
     <RelativeLayout
         android:id="@+id/detail_container"
@@ -99,15 +99,18 @@
                 android:id="@+id/length" />
         </LinearLayout>
 
+
         <TextView
             android:id="@+id/lyrics"
             android:layout_width="wrap_content"
+            android:textColor="#000"
             android:layout_height="wrap_content"
             android:layout_below="@id/track_panel"
             android:layout_margin="15dp"
-            android:text="@string/lyrics"
+            android:text="@string/block_of_text"
             android:textAppearance="?android:attr/textAppearanceInverse"
             />
+
     </RelativeLayout>
 
 </ScrollView>

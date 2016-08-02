@@ -55,57 +55,7 @@ public class AlbumDetailActivity extends Activity {
         setContentView(R.layout.activity_album_detail);
         ButterKnife.bind(this);
         populate();
-        setupTransitions();
-    }
-
-    private void animateFab() {
-        fab.setScaleX(0);
-        fab.setScaleY(0);
-        int startPositionTitle = titlePanel.getTop();
-        int endPositionTitle = titlePanel.getBottom();
-        int startPositionTrack = trackPanel.getTop();
-        int endPositionTrack = trackPanel.getBottom();
-        titlePanel.setBottom(startPositionTitle);
-        trackPanel.setBottom(startPositionTrack);
-
-        /*ObjectAnimator scaleX = ObjectAnimator.ofFloat(fab, "scaleX", 0, 1).setDuration(300);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(fab, "scaleY", 0, 1).setDuration(300);
-        AnimatorSet scaleFab = new AnimatorSet();
-        scaleFab.playTogether(scaleX, scaleY);*/
-
-        Animator scaleFab = AnimatorInflater.loadAnimator(this, R.animator.scale);
-        scaleFab.setTarget(fab);
-
-        ObjectAnimator titlePanelAnimation = ObjectAnimator.ofInt(titlePanel, "bottom", startPositionTitle, endPositionTitle).setDuration(200);
-        titlePanelAnimation.setInterpolator(new AccelerateInterpolator());
-        ObjectAnimator trackPanelAnimation = ObjectAnimator.ofInt(trackPanel, "bottom", startPositionTrack, endPositionTrack).setDuration(200);
-        trackPanelAnimation.setInterpolator(new DecelerateInterpolator());
-        AnimatorSet set = new AnimatorSet();
-        set.playSequentially(titlePanelAnimation, trackPanelAnimation, scaleFab);
-        set.start();
-    }
-
-    private Transition createTransition() {
-        TransitionSet set = new TransitionSet();
-        set.setOrdering(TransitionSet.ORDERING_SEQUENTIAL);
-
-        Transition tFab = new Scale();
-        tFab.setDuration(150);
-        tFab.addTarget(fab);
-
-        Transition tTitle = new Fold();
-        tTitle.setDuration(150);
-        tTitle.addTarget(titlePanel);
-
-        Transition tTrack = new Fold();
-        tTrack.setDuration(150);
-        tTrack.addTarget(trackPanel);
-
-        set.addTransition(tTrack);
-        set.addTransition(tTitle);
-        set.addTransition(tFab);
-
-        return set;
+        setUpTransition();
     }
 
     @OnClick(R.id.album_art)
@@ -115,33 +65,25 @@ public class AlbumDetailActivity extends Activity {
         fab.setVisibility(View.INVISIBLE);
         titlePanel.setVisibility(View.INVISIBLE);
         trackPanel.setVisibility(View.INVISIBLE);*/
-        animateFab();
     }
+
 
     @OnClick(R.id.track_panel)
     public void onTrackPanelClicked(View view) {
-        if (mCurrentScene == mExpandedScene) {
+        if(mCurrentScene == mExpandedScene) {
             mCurrentScene = mCollapsedScene;
-        }
-        else {
+        } else {
             mCurrentScene = mExpandedScene;
         }
         mTransitionManager.transitionTo(mCurrentScene);
     }
 
-    private void setupTransitions() {
-//        Slide slide = new Slide(Gravity.BOTTOM);
-//        slide.excludeTarget(android.R.id.statusBarBackground, true);
-//        getWindow().setEnterTransition(slide);
-//        getWindow().setSharedElementsUseOverlay(false);
-
+    private void setUpTransition() {
         mTransitionManager = new TransitionManager();
-        ViewGroup transitionRoot = detailContainer;
+        ViewGroup transitionRoot = detailContainer; // Element that contains everything that needs to be animated
 
-        // Expanded scene
-        mExpandedScene = Scene.getSceneForLayout(transitionRoot,
-                R.layout.activity_album_detail_expanded, this);
-
+        // Expanded Scene
+        mExpandedScene = Scene.getSceneForLayout(transitionRoot, R.layout.activity_album_detail_expanded, this);
         mExpandedScene.setEnterAction(new Runnable() {
             @Override
             public void run() {
@@ -153,19 +95,20 @@ public class AlbumDetailActivity extends Activity {
 
         TransitionSet expandTransitionSet = new TransitionSet();
         expandTransitionSet.setOrdering(TransitionSet.ORDERING_SEQUENTIAL);
+
         ChangeBounds changeBounds = new ChangeBounds();
         changeBounds.setDuration(200);
         expandTransitionSet.addTransition(changeBounds);
 
-        Fade fadeLyrics = new Fade();
-        fadeLyrics.addTarget(R.id.lyrics);
-        fadeLyrics.setDuration(150);
-        expandTransitionSet.addTransition(fadeLyrics);
 
-        // Collapsed scene
-        mCollapsedScene = Scene.getSceneForLayout(transitionRoot,
-                R.layout.activity_album_detail, this);
+        Fade fadeInLyrics  = new Fade();
+        fadeInLyrics.addTarget(R.id.lyrics);
+        fadeInLyrics.setDuration(200);
+        expandTransitionSet.addTransition(fadeInLyrics);
 
+
+        // Collapsed Scene
+        mCollapsedScene = Scene.getSceneForLayout(transitionRoot, R.layout.activity_album_detail, this);
         mCollapsedScene.setEnterAction(new Runnable() {
             @Override
             public void run() {
@@ -178,9 +121,9 @@ public class AlbumDetailActivity extends Activity {
         TransitionSet collapseTransitionSet = new TransitionSet();
         collapseTransitionSet.setOrdering(TransitionSet.ORDERING_SEQUENTIAL);
 
-        Fade fadeOutLyrics = new Fade();
+        Fade fadeOutLyrics  = new Fade();
         fadeOutLyrics.addTarget(R.id.lyrics);
-        fadeOutLyrics.setDuration(150);
+        fadeOutLyrics.setDuration(100);
         collapseTransitionSet.addTransition(fadeOutLyrics);
 
         ChangeBounds resetBounds = new ChangeBounds();
@@ -190,9 +133,8 @@ public class AlbumDetailActivity extends Activity {
         mTransitionManager.setTransition(mExpandedScene, mCollapsedScene, collapseTransitionSet);
         mTransitionManager.setTransition(mCollapsedScene, mExpandedScene, expandTransitionSet);
         mCollapsedScene.enter();
-
-//        postponeEnterTransition();
     }
+
 
     private void populate() {
         int albumArtResId = getIntent().getIntExtra(EXTRA_ALBUM_ART_RESID, R.drawable.mean_something_kinder_than_wolves);
