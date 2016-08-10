@@ -24,18 +24,7 @@ public class Scale extends Visibility {
         AnimatorSet set = new AnimatorSet();
         ObjectAnimator x = ObjectAnimator.ofFloat(view, View.SCALE_X, fromScale, toScale);
         ObjectAnimator y = ObjectAnimator.ofFloat(view, View.SCALE_Y, fromScale, toScale);
-        set.playTogether(x, y);
+        set.playTogether(x,y);
         return set;
     }
-
 }
-
-
-
-
-
-
-
-
-
-

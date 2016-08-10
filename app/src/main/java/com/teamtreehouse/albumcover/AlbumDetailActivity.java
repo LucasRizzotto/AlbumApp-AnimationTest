@@ -1,13 +1,10 @@
 package com.teamtreehouse.albumcover;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.graphics.Palette;
@@ -21,8 +18,6 @@ import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -58,13 +53,27 @@ public class AlbumDetailActivity extends Activity {
         setUpTransition();
     }
 
+    private Transition createTransition() {
+
+        TransitionSet transitionSet = new TransitionSet(); // Set that contains all transitions
+        transitionSet.setOrdering(TransitionSet.ORDERING_SEQUENTIAL);
+
+        Transition tFab = new Scale();
+        tFab.setDuration(150);
+        tFab.addTarget(fab);
+
+        return tFab;
+    }
+
+
+
     @OnClick(R.id.album_art)
     public void onAlbumArtClick(View view) {
-        /*Transition transition = createTransition();
+        Transition transition = createTransition();
         TransitionManager.beginDelayedTransition(detailContainer, transition);
         fab.setVisibility(View.INVISIBLE);
         titlePanel.setVisibility(View.INVISIBLE);
-        trackPanel.setVisibility(View.INVISIBLE);*/
+        trackPanel.setVisibility(View.INVISIBLE);
     }
 
 
@@ -78,7 +87,13 @@ public class AlbumDetailActivity extends Activity {
         mTransitionManager.transitionTo(mCurrentScene);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setUpTransition() {
+        Slide slide = new Slide(Gravity.BOTTOM);
+        slide.excludeTarget(android.R.id.statusBarBackground, true);
+        getWindow().setSharedElementsUseOverlay(false);
+        getWindow().setEnterTransition(slide);
+
         mTransitionManager = new TransitionManager();
         ViewGroup transitionRoot = detailContainer; // Element that contains everything that needs to be animated
 
@@ -133,13 +148,14 @@ public class AlbumDetailActivity extends Activity {
         mTransitionManager.setTransition(mExpandedScene, mCollapsedScene, collapseTransitionSet);
         mTransitionManager.setTransition(mCollapsedScene, mExpandedScene, expandTransitionSet);
         mCollapsedScene.enter();
+
     }
 
 
     private void populate() {
+
         int albumArtResId = getIntent().getIntExtra(EXTRA_ALBUM_ART_RESID, R.drawable.mean_something_kinder_than_wolves);
         albumArtView.setImageResource(albumArtResId);
-
         Bitmap albumBitmap = getReducedBitmap(albumArtResId);
         colorizeFromImage(albumBitmap);
     }

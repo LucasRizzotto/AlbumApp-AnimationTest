@@ -20,31 +20,17 @@ public class Fold extends Visibility {
         return createFoldAnimator(view, true);
     }
 
+
     public Animator createFoldAnimator(View view, boolean folding) {
         int start = view.getTop();
         int end = view.getTop() + view.getMeasuredHeight() - 1;
-        if (folding) {
+        if(folding) {
             int temp = start;
             start = end;
             end = temp;
         }
         view.setBottom(start);
-
         ObjectAnimator animator = ObjectAnimator.ofInt(view, "bottom", start, end);
         return animator;
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
